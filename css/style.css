@@ -1,8 +1,13 @@
-.container {
-    width: 50%;
-    margin: 0 auto;
-    padding: 20px;
+
+body {
     background-color: olivedrab;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
 }
 
 .btn {
@@ -18,9 +23,16 @@
 }
 
 .levels {
-    margin: 10px 0;
     display: flex;
-    justify-content: space-evenly;
+    margin: 20px 0;
+}
+
+.level-box:not(:last-child){
+    margin-right: 20px;
+}
+
+.display-container {
+    margin-bottom: 20px;
 }
 
 .board-container {
@@ -32,17 +44,18 @@
 .board {
     border: 1px solid black;
     border-radius: 5px;
-    border-spacing: 10px;
+    border-spacing: 5px;
     background-color: darkgoldenrod;
 }
 
 .board td {
     border: 1px solid black;
+    border-radius: 3px;;
 }
 
 .board-btn {
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     border: none;
     border-radius: 3px;
     background-color:khaki;
@@ -50,6 +63,8 @@
 
 .board-btn.disabled {
     opacity: 50%;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .trophy-img {

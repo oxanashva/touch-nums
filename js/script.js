@@ -1,110 +1,109 @@
-let gNums = [];
-let gBoardSize = 16;
-let gNextNum = 1;
-let gIsGameOn = false;
-let gGameTime = 0;
-let gInterval = 1000;
-let gTimerInterval;
-const boardContainer = document.querySelector('.board-container');
-
-function onInit() {
-    gNums = fillNums(gBoardSize);
-    renderBoard(gBoardSize);
+const gGame = {
+    numbers: [],
+    boardSize: 16,
+    gameTime: 0,
+    nextNumber: 1,
+    isGameActive: false,
+    timerInterval: null,
 }
 
-function renderBoard(size) {
-    shuffle(gNums);
-    
-    boardContainer.innerHTML = '';
-    boardContainer.innerHTML = '<table class="board"></table>';
-    const elBoard = boardContainer.querySelector(".board");
+const elBoardContainer = document.querySelector('.board-container');
+const elGameTime = document.querySelector('#gameTime');
+const elNextNumber = document.querySelector('#nextNumber');
+
+function onInit() {
+    gGame.numbers = generateNumbers(gGame.boardSize);
+    renderGameBoard(gGame.boardSize, gGame.numbers);
+    displayGameTime(gGame.gameTime);
+    displayNextNumber(gGame.nextNumber);
+}
+
+function generateNumbers(size) {
+    return Array.from({length: size}, (_, i) => i + 1)
+}
+
+function renderGameBoard(size, numbers) {
+    const shuffledNumbers = shuffle([...numbers]);
+    const boardDimension = Math.sqrt(size);
+    elBoardContainer.innerHTML = '';
+    elBoardContainer.innerHTML = '<table class="board"></table>';
+    const elBoard = elBoardContainer.querySelector(".board");
     let strHTML = "";
-    for (let i = 0; i < Math.sqrt(size); i++) {
+    for (let i = 0; i < boardDimension; i++) {
         strHTML += '<tr>'
-        for (let j = 0; j < Math.sqrt(size); j++) {
-            strHTML += `<td><button class="board-btn" onclick="onCellBtnClick(this)"></button></td>`;
+        for (let j = 0; j < boardDimension; j++) {
+            const num = shuffledNumbers[i * boardDimension + j]
+            strHTML += `<td><button class="board-btn" onclick="onCellClick(this, ${num})">${num}</button></td>`;
         }
         strHTML+= "</tr>";
     }
     elBoard.innerHTML = strHTML;
-
-    const elBoardBtns = elBoard.querySelectorAll('.board-btn');
-    for (let i = 0; i < elBoardBtns.length; i++) {
-        elBoardBtns[i].innerHTML = gNums[i];
-    }
 }
 
-function fillNums(size) {
-    let nums = Array.from({length: size}, (_, i) => i + 1)
-    return nums;
+function displayGameTime(totalSeconds) {
+    elGameTime.innerText = `${formatTime(totalSeconds)}`;
 }
 
-function onStartGame() {
-    gIsGameOn = false;
-    gNextNum = 1;
-    gGameTime = 0;
-    endTimer();
-    onInit();
-    showNextNum(gNextNum);
-}
-
-function onCellBtnClick(cellBtn) {  
-    if (!gIsGameOn && gNextNum === 1) {
-        startTimer();
-        showNextNum(gNextNum);
-    }  
-    if (Number(cellBtn.innerText) === gNextNum) {
-        gNextNum++;
-        cellBtn.classList.add('disabled');
-        if (gNextNum > gBoardSize) {
-            gIsGameOn = true;
-        }
-    }
-    renderGameOff(gIsGameOn);
-    showNextNum(gNextNum);  
-    return;
-}
-
-function renderGameOff(isGameOn) {
-    if (isGameOn) {
-        boardContainer.innerHTML = `<div>
-            <img src="img/trophy.png" />
-            <p>Congrats! You Won!</p>
-        </div>`;
-        endTimer();
-        gNextNum = null;
-    }
-}
-
-function startTimer() {
-    endTimer();
-    gTimerInterval = setInterval(() => {
-        gGameTime++;
-        showGameTime();
-    }, gInterval) 
-}
-
-function endTimer() {
-    clearInterval(gTimerInterval);
-}
-
-function showGameTime() {
-    const elGameTime = document.querySelector('#gameTime');
-    elGameTime.innerText = `${secondsToMMSS(gGameTime)}`;
-}
-
-function showNextNum(nextNum) {
-    const elNextNumber = document.querySelector('#nextNumber');    
+function displayNextNumber(nextNum) {
     elNextNumber.innerText = nextNum;
 }
 
+function onStartGame() {
+  resetGame();
+  onInit();
+}
+
+function onCellClick(clickedButton, clickedNumber) {  
+    if (!gGame.isGameActive && gGame.nextNumber === 1) {
+        startTimer();
+    }  
+    if (clickedNumber === gGame.nextNumber) {
+        gGame.nextNumber++;
+        clickedButton.classList.add('disabled');
+        if (gGame.nextNumber > gGame.boardSize) {
+            endGame();
+            return;
+        }
+    }
+    displayNextNumber(gGame.nextNumber);  
+}
+
+function endGame() {
+    stopTimer();
+    gGame.isGameActive = false;
+    elBoardContainer.innerHTML = `
+        <div>
+            <img src="img/trophy.png" alt="Trophy" />
+            <p>Congrats! You Won!</p>
+        </div>
+    `;
+    displayNextNumber('Done!')
+}
+
+function startTimer() {
+    stopTimer();
+    gGame.timerInterval = setInterval(() => {
+        gGame.gameTime++;
+        displayGameTime(gGame.gameTime);
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(gGame.timerInterval);
+    gGame.timerInterval = null;
+}
+
 function onSetLevel(level) {
-    gBoardSize = level;
-    gIsGameOn = false;
-    gNextNum = 1;
-    gGameTime = 0;
-    endTimer();
-    showGameTime()
-    showNextNum(gNextNum);
+    gGame.boardSize = level;
+    resetGame();
     onInit();
+}
+
+function resetGame() {
+    gGame.isGameActive = false;
+    gGame.gameTime = 0;
+    gGame.nextNumber = 1;
+    stopTimer();
+    displayGameTime(gGame.gameTime);
+    displayNextNumber(gGame.nextNumber);
 }
