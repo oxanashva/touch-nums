@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="#" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Touch The Nums</title>
+  </head>
+  <body onload="onInit()">
+    <div class="container">
+      <h1>Thouch The Nums</h1>
+      <button class="btn" onclick="onStartGame()">New Game</button>
+      <div class="levels">
+        <div class="level-box">
+          <label for="easy">Easy (<span id="levelEasy">16</span>)</label>
+          <input type="radio" name="level" id="easy" onclick="onSetLevel(16)" checked />
+        </div>
+        <div class="level-box">
+          <label for="hard">Hard (<span id="levelHard">25</span>)</label>
+          <input type="radio" name="level" id="hard" onclick="onSetLevel(25)" />
+        </div>
+        <div class="level-box">
+          <label for="extreme">Extreme (<span id="levelExtreme">36</span>)</label>
+          <input type="radio" name="level" id="extreme" onclick="onSetLevel(36)" />
+        </div>
+      </div>
+      <div class="display-container">
+        <div class="display-box">Game Time: <span id="gameTime">00:00</span></div>
+        <div class="display-box">
+          Next Number: <span id="nextNumber">1</span>
+        </div>
+      </div>
+      <div class="board-container"></div>
+    </div>
+    <script src="js/utility.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

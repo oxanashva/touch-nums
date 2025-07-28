@@ -1,0 +1,57 @@
+.container {
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: olivedrab;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    background-color: darkgrey;
+    transition: .5s;
+}
+
+.btn:hover {
+    background-color: lightslategray;
+}
+
+.levels {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.board-container {
+   display: flex;
+   justify-content: center;
+   margin: 10px 0;
+}
+
+.board {
+    border: 1px solid black;
+    border-radius: 5px;
+    border-spacing: 10px;
+    background-color: darkgoldenrod;
+}
+
+.board td {
+    border: 1px solid black;
+}
+
+.board-btn {
+    width: 100px;
+    height: 100px;
+    border: none;
+    border-radius: 3px;
+    background-color:khaki;
+}
+
+.board-btn.disabled {
+    opacity: 50%;
+}
+
+.trophy-img {
+    display: none;
+}
